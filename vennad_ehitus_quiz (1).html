@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vennad Ehitus Viktoriin</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f8f9fa; padding: 20px; }
+    .quiz-container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+    h2 { font-size: 20px; }
+    .option { display: block; margin: 8px 0; padding: 10px; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; }
+    .option:hover { background: #f1f1f1; }
+    #next-btn { margin-top: 15px; padding: 10px 20px; border: none; background: #007bff; color: white; border-radius: 6px; cursor: pointer; display: none; }
+    #next-btn:hover { background: #0056b3; }
+    #result { font-size: 18px; font-weight: bold; margin-top: 20px; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <h2 id="question">Küsimus tuleb siia</h2>
+    <div id="options"></div>
+    <button id="next-btn">Järgmine</button>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const quizData = [
+      { question: "Millal registreeriti Tartu Linnavalitsuse AS Vennad Ehitus?", options: ["23.09.1997", "26.09.1994", "06.10.1994", "1.10.1994"], answer: "06.10.1994" },
+      { question: "Mis kuupäevast alates on Vennad Ehitusel käibemaksukohus?", options: ["01.07.1995", "26.09.1994", "Ei olegi", "01.01.1995"], answer: "01.07.1995" },
+      { question: "Kes neist tuli esimesena Vennad Ehitusse tööle?", options: ["Harry Malmiste", "Janek Eriksoo", "Olev Paulson", "Raivo Rõõm"], answer: "Janek Eriksoo" },
+      { question: "Mitu inimest on tänase seisuga OÜ Vennad Ehituses tööl?", options: ["22", "11", "14", "17"], answer: "17" },
+      { question: "Mis auto andis Agu ettevõtte sissemaksuks?", options: ["Ford Escort", "Opel Omega", "Opel Ascona", "Ford Sierra"], answer: "Opel Ascona" },
+      { question: "Kui suur oli Vennad Ehituse käive 1995. aastal?", options: ["0,92 milj", "0,52 milj", "1,32 milj", "1,76 milj"], answer: "0,92 milj" },
+      { question: "Kui vanaks saab OÜ Vennad Ehitus 2025.a?", options: ["29", "30", "31", "32"], answer: "31" },
+      { question: "Mitmes suvine mitmevõistlus oli 2024. aastal Käärikul?", options: ["20.", "25.", "23.", "21"], answer: "25." },
+      { question: "Mis hoone on Navitrolla 2011. a maalil?", options: ["Kõpu mõis", "Kaitseväe angaarid", "Tartu Raudteejaam", "Kaimi Koolimaja"], answer: "Tartu Raudteejaam" },
+      { question: "Millal tehti esimene positus OÜ Vennad Ehituse ehitusfoorumisse?", options: ["2010.a", "2000.a", "2015.a", "2005.a"], answer: "2005.a" },
+      { question: "Kui suur oli OÜ Vennad Ehituse 2024. a käive?", options: ["2,04 milj", "2,24 milj", "2,15 milj", "2,05 milj"], answer: "2,24 milj" }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    const questionEl = document.getElementById("question");
+    const optionsEl = document.getElementById("options");
+    const nextBtn = document.getElementById("next-btn");
+    const resultEl = document.getElementById("result");
+
+    function loadQuestion() {
+      questionEl.textContent = quizData[currentQuestion].question;
+      optionsEl.innerHTML = "";
+      quizData[currentQuestion].options.forEach(option => {
+        const btn = document.createElement("button");
+        btn.textContent = option;
+        btn.classList.add("option");
+        btn.onclick = () => selectAnswer(option);
+        optionsEl.appendChild(btn);
+      });
+    }
+
+    function selectAnswer(selected) {
+      const correct = quizData[currentQuestion].answer;
+      if (selected === correct) { score++; }
+      Array.from(optionsEl.children).forEach(btn => {
+        if (btn.textContent === correct) {
+          btn.style.background = "#28a745"; btn.style.color = "white";
+        } else if (btn.textContent === selected) {
+          btn.style.background = "#dc3545"; btn.style.color = "white";
+        }
+        btn.disabled = true;
+      });
+      nextBtn.style.display = "block";
+    }
+
+    nextBtn.addEventListener("click", () => {
+      currentQuestion++;
+      if (currentQuestion < quizData.length) {
+        loadQuestion();
+        nextBtn.style.display = "none";
+      } else {
+        showResult();
+      }
+    });
+
+    function showResult() {
+      questionEl.style.display = "none";
+      optionsEl.style.display = "none";
+      nextBtn.style.display = "none";
+      resultEl.textContent = `Sinu tulemus: ${score} / ${quizData.length}`;
+    }
+
+    loadQuestion();
+  </script>
+</body>
+</html>
